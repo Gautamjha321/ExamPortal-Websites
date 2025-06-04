@@ -1,27 +1,101 @@
-# ExamFrontend
+# 🎓 ExamPortal – AI-Powered Online Examination System
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.4.
+A full-stack intelligent online exam platform with advanced proctoring, AI-generated questions, bulk question uploads via CSV, and anti-cheating mechanisms.
 
-## Development server
+---
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## 🛠️ Tech Stack
 
-## Code scaffolding
+- **Frontend**: Angular 15, Angular Material, CKEditor, ngx-ui-loader, Webcam API
+- **Backend**: Java Spring Boot, REST APIs, JWT Auth
+- **Database**: MySQL
+- **AI Integration**: Gemini API (Google AI) for automatic question generation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## 🚀 Features
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### 👨‍💼 Admin Panel
+- 🔄 **One-click CSV Upload**: Add multiple quiz questions via CSV file.
+- 🧠 **AI-Powered Question Generator**: Generate quiz questions using Gemini AI.
+- 🧩 Quiz Management: Create, update, delete quizzes and categories.
+- 📈 View Quiz Attempts with user scorecards.
+- 🧑‍💼 User Management with Role-Based Access.
 
-## Running unit tests
+### 👨‍🎓 User Panel
+- 🔐 JWT Authentication (Login / Signup).
+- 📝 Attempt Quizzes with a clean, responsive UI.
+- 📸 **Real-time Camera Monitoring** during exam sessions.
+- 🚫 **Tab-Switch Detection**:
+  - Warning on every switch.
+  - Auto-submits after 5 switches.
+- ✅ Auto Result Calculation & Display.
+- 🖨️ **Printable Result**: Download or print quiz results.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+---
 
-## Running end-to-end tests
+## 🧠 AI Question Generation (Gemini API)
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Admin can enter a topic and generate intelligent questions and answers automatically using Google Gemini API. This accelerates exam creation and reduces manual effort.
 
-## Further help
+---
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## 📂 Bulk Upload via CSV
+
+Admin can upload questions for any quiz using a CSV file containing fields like:
+- Question Content
+- Options
+- Correct Answer
+- Quiz ID or Category
+
+Example CSV Format:
+```csv
+questionContent,option1,option2,option3,option4,answer,quizId
+"What is Angular?", "Framework", "Library", "Language", "IDE", "Framework", 1
+
+🛡️ Anti-Cheating System
+Real-time webcam access during the quiz.
+
+Tab switching detection using JavaScript.
+
+5 warnings allowed – 6th switch auto-submits the exam.
+
+Secure backend with token verification.
+
+cd examportal
+npm install
+ng serve
+
+
+🔑 Environment Config
+application.properties (Spring Boot)
+properties
+Copy
+Edit
+spring.datasource.url=jdbc:mysql://localhost:3306/examportal
+spring.datasource.username=root
+spring.datasource.password=your_password
+jwt.secret=your_secret_key
+
+🔗 Screenshots
+Dashboard	Quiz Page	AI Question Generator	Camera Monitoring
+
+🤝 Contributing
+Contributions are welcome!
+Create a new branch, commit your changes, and open a PR.
+
+📄 License
+This project is licensed under the MIT License.
+
+✨ Author
+Gautam Kumar Jha
+Developer | Full Stack Engineer | AI Enthusiast
+
+
+---
+
+Let me know if you want:
+- Markdown with working folder structure.
+- Images added to the `/screenshots/` folder.
+- Deployed link / Live demo badge section.
+- Separate `.csv` file for question upload sample.
