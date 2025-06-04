@@ -1,0 +1,139 @@
+<div class="add-quiz-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Add New Exams</h1>
+            <p class="page-subtitle">Create a new Exam for your students</p>
+        </div>
+    </div>
+
+    <div class="quiz-form-card">
+        <div class="form-header">
+            <div class="form-icon">
+                <mat-icon>quiz</mat-icon>
+            </div>
+            <h2>Exams Details</h2>
+        </div>
+
+        <div class="form-content">
+            <form (ngSubmit)="addQuiz()">
+                <div class="form-section">
+                    <h3 class="section-title">Basic Information</h3>
+                    
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Exam Title</mat-label>
+                            <input 
+                                matInput 
+                                placeholder="Enter quiz title" 
+                                name="title" 
+                                [(ngModel)]="quizData.title" 
+                                required
+                            >
+                            <mat-icon matSuffix>title</mat-icon>
+                            <mat-hint>Give a unique and descriptive title</mat-hint>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Exam Description</mat-label>
+                            <textarea 
+                                matInput 
+                                placeholder="Enter quiz description" 
+                                name="description" 
+                                [(ngModel)]="quizData.description" 
+                                rows="5"
+                            ></textarea>
+                            <mat-icon matSuffix>description</mat-icon>
+                            <mat-hint>Describe what this quiz is about</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Exam Configuration</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-field half-width">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Maximum Marks</mat-label>
+                                <input 
+                                    matInput 
+                                    placeholder="Enter maximum marks" 
+                                    name="maxMarks" 
+                                    [(ngModel)]="quizData.maxMarks" 
+                                    type="number"
+                                    min="0"
+                                >
+                                <mat-icon matSuffix>grade</mat-icon>
+                                <mat-hint>Total marks for this Exam</mat-hint>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-field half-width">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Number of Questions</mat-label>
+                                <input 
+                                    matInput 
+                                    placeholder="Enter number of questions" 
+                                    name="noOfQuestions" 
+                                    [(ngModel)]="quizData.noOfQuestions" 
+                                    type="number"
+                                    min="1"
+                                >
+                                <mat-icon matSuffix>help</mat-icon>
+                                <mat-hint>How many questions in this Exam</mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Select Category</mat-label>
+                            <mat-select name="category" [(ngModel)]="quizData.category.cId">
+                                <mat-option *ngFor="let c of categories" [value]="c.cId">
+                                    {{c.title}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-icon matSuffix>category</mat-icon>
+                            <mat-hint>Choose a category for this Exam</mat-hint>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field toggle-field">
+                        <mat-slide-toggle 
+                            [(ngModel)]="quizData.active" 
+                            name="active" 
+                            color="primary"
+                            class="publish-toggle"
+                        >
+                            <span class="toggle-label">Publish Exam</span>
+                        </mat-slide-toggle>
+                        <p class="toggle-hint">Toggle to make this quiz available to students</p>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button 
+                        type="button" 
+                        mat-stroked-button 
+                        class="cancel-button" 
+                        routerLink="/admin/quizzes"
+                    >
+                        <mat-icon>back</mat-icon>
+                        <span>Cancel</span>
+                    </button>
+                    
+                    <button 
+                        type="submit" 
+                        mat-raised-button 
+                        class="submit-button"
+                    >
+                        <mat-icon>add_circle</mat-icon>
+                        <span>Add Exam</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

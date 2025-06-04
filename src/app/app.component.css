@@ -1,0 +1,50 @@
+/* App Component Styles */
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Content container that holds router-outlet */
+.content-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-top: 70px; /* Space for fixed navbar */
+    min-height: calc(100vh - 70px);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .content-container {
+        padding-top: 60px; /* Smaller padding for mobile */
+    }
+}
+
+/* Loader styles */
+::ng-deep .ngx-ui-loader-content {
+    z-index: 99999 !important;
+}
+
+::ng-deep .ngx-ui-loader-text {
+    margin-top: 10px !important;
+    color: #FF3CAC !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+    letter-spacing: 1px !important;
+}
+
+::ng-deep .ngx-ui-loader .ngx-spinner {
+    filter: drop-shadow(0 0 15px rgba(255, 60, 172, 0.7)) !important;
+}
+
+::ng-deep .ngx-ui-loader .ngx-spinner > div {
+    background-color: #FF3CAC !important;
+}
+
+::ng-deep .ngx-ui-loader .ngx-progress .ngx-progress-bar {
+    height: 5px !important;
+}

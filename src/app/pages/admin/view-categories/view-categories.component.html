@@ -1,0 +1,80 @@
+<!-- <mat-card> 
+    <mat-list>
+        <div mat-subheader>
+            All Categories
+        </div>
+        <mat-list-item *ngFor="let c of categories">
+            <mat-icon> folder </mat-icon>
+            <div mat-line>
+                {{c.title}}
+            </div>
+            <div mat-line>
+                {{c.description}}
+            </div>
+            <mat-divider></mat-divider>
+        </mat-list-item>
+    </mat-list>
+</mat-card> -->
+
+<div class="view-categories-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">All Categories</h1>
+            <p class="page-subtitle">Manage your quiz categories</p>
+        </div>
+    </div>
+
+    <div class="categories-card">
+        <div class="card-header">
+            <div class="header-icon">
+                <mat-icon>category</mat-icon>
+            </div>
+            <h2>Categories List</h2>
+            <div class="spacer"></div>
+            <button 
+                mat-raised-button 
+                class="add-button" 
+                routerLink="/admin/add-category"
+            >
+                <mat-icon>add_circle</mat-icon>
+                <span>Add New</span>
+            </button>
+        </div>
+
+        <div class="categories-list" *ngIf="categories.length > 0">
+            <div class="category-item" *ngFor="let c of categories; let i = index">
+                <div class="category-icon">
+                    <mat-icon>folder</mat-icon>
+                </div>
+                <div class="category-details">
+                    <h3 class="category-title">{{c.title}}</h3>
+                    <p class="category-description">{{c.description}}</p>
+                </div>
+                <div class="category-actions">
+                    <button mat-icon-button class="action-button edit-button" matTooltip="Edit Category">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button class="action-button delete-button" matTooltip="Delete Category">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" *ngIf="categories.length === 0">
+            <div class="empty-icon">
+                <mat-icon>category_off</mat-icon>
+            </div>
+            <h3>No Categories Found</h3>
+            <p>Start by adding a new category for your Exams</p>
+            <button 
+                mat-raised-button 
+                class="add-button" 
+                routerLink="/admin/add-category"
+            >
+                <mat-icon>add_circle</mat-icon>
+                <span>Add Category</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+<div class="add-category-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Add New Category</h1>
+            <p class="page-subtitle">Create a new category for organizing Exams</p>
+        </div>
+    </div>
+
+    <div class="category-form-card">
+        <div class="form-header">
+            <div class="form-icon">
+                <mat-icon>category</mat-icon>
+            </div>
+            <h2>Category Details</h2>
+        </div>
+
+        <div class="form-content">
+            <form (ngSubmit)="formSubmit()">
+                <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Category Title</mat-label>
+                        <input 
+                            matInput 
+                            placeholder="Enter category title" 
+                            name="title" 
+                            [(ngModel)]="category.title" 
+                            required
+                        >
+                        <mat-icon matSuffix>title</mat-icon>
+                        <mat-hint>Give a unique and descriptive title</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-field">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Category Description</mat-label>
+                        <textarea 
+                            matInput 
+                            placeholder="Enter category description" 
+                            name="description" 
+                            [(ngModel)]="category.description" 
+                            rows="6"
+                        ></textarea>
+                        <mat-icon matSuffix>description</mat-icon>
+                        <mat-hint>Describe what this category is about</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                    <button 
+                        type="button" 
+                        mat-stroked-button 
+                        class="cancel-button" 
+                        routerLink="/admin/categories"
+                    >
+                        <mat-icon>arrow_back</mat-icon>
+                        <span>Cancel</span>
+                    </button>
+                    
+                    <button 
+                        type="submit" 
+                        mat-raised-button 
+                        class="submit-button"
+                    >
+                        <mat-icon>add_circle</mat-icon>
+                        <span>Add Category</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

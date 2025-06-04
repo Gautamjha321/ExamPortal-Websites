@@ -1,0 +1,206 @@
+<div class="quiz-container" *ngIf="!isSubmitted">
+  <div class="quiz-layout">
+    <!-- Sidebar Panel -->
+    <div class="sidebar-panel">
+      <div class="instructions-card">
+        <h2 class="panel-title">Instructions</h2>
+        <div class="instruction-list">
+          <div class="instruction-item">
+            <mat-icon>refresh</mat-icon>
+            <span>Do not refresh the page. Otherwise, you will get new questions.</span>
+          </div>
+          <div class="instruction-item">
+            <mat-icon>tab</mat-icon>
+            <span>Do not switch the tab. Max warnings: {{ maxWarnings }}</span>
+          </div>
+          <div class="instruction-item">
+            <mat-icon>fullscreen_exit</mat-icon>
+            <span>Do not minimize the window.</span>
+          </div>
+        </div>
+      </div>
+      <!-- Camera Feed -->
+      <div class="camera-feed">
+        <video #cameraFeed autoplay muted playsinline></video>
+      </div>
+    </div>
+
+    <!-- Content Panel -->
+    <div class="content-panel">
+      <div class="quiz-header">
+        <h1 class="quiz-title">Quiz: <span>{{ questions[currentQuestionIndex]?.quiz?.title }}</span></h1>
+      </div>
+
+      <div class="questions-container">
+        <div class="question-card">
+          <div class="question-header">
+            <div class="question-number">Question {{ currentQuestionIndex + 1 }}</div>
+            <div class="question-marks">{{ questions[currentQuestionIndex]?.quiz?.maxMarks / questions.length }} marks</div>
+          </div>
+
+          <div class="question-content">
+            <p [innerHTML]="questions[currentQuestionIndex]?.content"></p>
+          </div>
+
+          <div class="options-container">
+            <div class="option-row">
+              <label class="option-item" [class.selected]="questions[currentQuestionIndex].givenAnswer === questions[currentQuestionIndex].option1">
+                <input [(ngModel)]="questions[currentQuestionIndex].givenAnswer" type="radio" [value]="questions[currentQuestionIndex].option1" [name]="currentQuestionIndex.toString()">
+                <div class="option-content">
+                  <div class="option-marker">A</div>
+                  <div class="option-text">{{ questions[currentQuestionIndex].option1 }}</div>
+                </div>
+              </label>
+
+              <label class="option-item" [class.selected]="questions[currentQuestionIndex].givenAnswer === questions[currentQuestionIndex].option2">
+                <input [(ngModel)]="questions[currentQuestionIndex].givenAnswer" type="radio" [value]="questions[currentQuestionIndex].option2" [name]="currentQuestionIndex.toString()">
+                <div class="option-content">
+                  <div class="option-marker">B</div>
+                  <div class="option-text">{{ questions[currentQuestionIndex].option2 }}</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="option-row" *ngIf="questions[currentQuestionIndex].option3 || questions[currentQuestionIndex].option4">
+              <label class="option-item" *ngIf="questions[currentQuestionIndex].option3" [class.selected]="questions[currentQuestionIndex].givenAnswer === questions[currentQuestionIndex].option3">
+                <input [(ngModel)]="questions[currentQuestionIndex].givenAnswer" type="radio" [value]="questions[currentQuestionIndex].option3" [name]="currentQuestionIndex.toString()">
+                <div class="option-content">
+                  <div class="option-marker">C</div>
+                  <div class="option-text">{{ questions[currentQuestionIndex].option3 }}</div>
+                </div>
+              </label>
+
+              <label class="option-item" *ngIf="questions[currentQuestionIndex].option4" [class.selected]="questions[currentQuestionIndex].givenAnswer === questions[currentQuestionIndex].option4">
+                <input [(ngModel)]="questions[currentQuestionIndex].givenAnswer" type="radio" [value]="questions[currentQuestionIndex].option4" [name]="currentQuestionIndex.toString()">
+                <div class="option-content">
+                  <div class="option-marker">D</div>
+                  <div class="option-text">{{ questions[currentQuestionIndex].option4 }}</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="navigation-buttons">
+          <button mat-raised-button class="nav-button" (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">
+            <mat-icon>arrow_back</mat-icon> Previous
+          </button>
+          <button mat-raised-button class="nav-button" (click)="nextQuestion()" [disabled]="currentQuestionIndex === questions.length - 1">
+            Next <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+
+        <div class="submit-container">
+          <button mat-raised-button class="submit-button" (click)="submitQuiz()">
+            <mat-icon>check_circle</mat-icon> Submit Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Panel -->
+    <div class="progress-panel">
+      <div class="progress-card">
+        <h2 class="panel-title">Progress</h2>
+        <div class="timer-container">
+          <div class="timer-display">{{ getFormattedTime() }}</div>
+          <p class="timer-note">Quiz will automatically submit when the timer reaches <b>0:0</b></p>
+        </div>
+
+        <div class="question-progress">
+          <h3>Questions</h3>
+          <div class="question-indicators">
+            <div class="question-indicator" *ngFor="let q of questions; let i = index" 
+                 [class.attempted]="q.givenAnswer" 
+                 [class.current]="currentQuestionIndex === i"
+                 (click)="goToQuestion(i)">
+              {{ i + 1 }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Result Section -->
+<div class="result-container" *ngIf="isSubmitted">
+  <div class="result-header">
+    <h1 class="result-title">Exams Result</h1>
+  </div>
+
+  <div class="result-summary">
+    <div class="result-card">
+      <div class="result-stats">
+        <div class="stat-item">
+          <div class="stat-icon marks-icon">
+            <mat-icon>emoji_events</mat-icon>
+          </div>
+          <div class="stat-content">
+            <h3>Marks Obtained</h3>
+            <p class="stat-value">{{ marksGot }}</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon attempted-icon">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="stat-content">
+            <h3>Questions Attempted</h3>
+            <p class="stat-value">{{ attempted }}</p>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon correct-icon">
+            <mat-icon>done_all</mat-icon>
+          </div>
+          <div class="stat-content">
+            <h3>Correct Answers</h3>
+            <p class="stat-value">{{ correctAnswers }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="answers-review">
+      <h2 class="section-title">Your Answers</h2>
+
+      <div class="answer-card" *ngFor="let q of questions; let i = index">
+        <div class="answer-header">
+          <div class="question-number">Question {{ i + 1 }}</div>
+          <div class="answer-status" [class.correct]="q.givenAnswer === q.answer" [class.incorrect]="q.givenAnswer !== q.answer">
+            {{ q.givenAnswer === q.answer ? 'Correct' : 'Incorrect' }}
+          </div>
+        </div>
+
+        <div class="answer-content">
+          <p class="question-text">{{ q.content }}</p>
+          <div class="answer-details">
+            <div class="answer-item">
+              <h4>Your Answer:</h4>
+              <p [class.correct-text]="q.givenAnswer === q.answer" [class.incorrect-text]="q.givenAnswer !== q.answer">
+                {{ q.givenAnswer || 'Not Attempted' }}
+              </p>
+            </div>
+
+            <div class="answer-item">
+              <h4>Correct Answer:</h4>
+              <p class="correct-text">{{ q.answer }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button mat-raised-button class="print-button" (click)="printPage()">
+        <mat-icon>print</mat-icon> Print Result
+      </button>
+      <button mat-raised-button class="home-button" [routerLink]="'/user-dashboard/0'">
+        <mat-icon>home</mat-icon> Back to Home
+      </button>
+    </div>
+  </div>
+</div>

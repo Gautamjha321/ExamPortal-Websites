@@ -1,0 +1,356 @@
+<div class="bootstrap-wrapper">
+    <div class="container-fluid">
+        <div *ngIf="isGenerating" class="text-center mt20">
+            <mat-spinner style="margin: auto;"></mat-spinner>
+            <h4>Please wait... Generating questions</h4>
+        </div>
+        
+        <!-- Main Content When Not Loading -->
+        <div *ngIf="!isGenerating">
+            <h1 class="mt20">AI Question Generator</h1>
+            <p *ngIf="qTitle">
+                Generating questions for quiz: <strong>{{ qTitle }}</strong>
+            </p>
+            
+            <!-- API Key Error -->
+            <div *ngIf="apiKeyError" class="alert alert-danger mt10 mb10">
+                <strong>Error: </strong> {{ apiKeyError }}
+            </div>
+            
+            <!-- Question Generator Form -->
+            <div class="row">
+                <div class="col-md-12">
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>AI Question Generator</mat-card-title>
+                            <mat-card-subtitle>Generate questions using Google's Gemini AI</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content class="mt20">
+                            <form [formGroup]="questionForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!-- API KEY SECTION -->
+                                        <mat-form-field class="w100" appearance="outline">
+                                            <mat-label>API Key</mat-label>
+                                            <input
+                                                type="text"
+                                                matInput
+                                                formControlName="apiKey"
+                                                placeholder="Enter your Gemini API key">
+                                            <mat-hint>Get your key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></mat-hint>
+                                            <mat-error *ngIf="questionForm.get('apiKey')?.errors?.['required']">API key is required</mat-error>
+                                        </mat-form-field>
+                                        
+                                        <div *ngIf="apiKeyError" class="text-danger mb10">
+                                            {{ apiKeyError }}
+                                        </div>
+
+                                        <div class="d-flex mb20">
+                                            <button mat-raised-button color="primary" (click)="setApiKey()">
+                                                <mat-icon>vpn_key</mat-icon> 
+                                                {{ apiKeySet ? 'Update API Key' : 'Set API Key' }}
+                                            </button>
+                                            
+                                            <div *ngIf="savedKeys.length > 0" class="ml10">
+                                                <button mat-button [matMenuTriggerFor]="keyMenu" color="accent">
+                                                    <mat-icon>history</mat-icon> Recent Keys
+                                                </button>
+                                                <mat-menu #keyMenu="matMenu">
+                                                    <button 
+                                                        mat-menu-item 
+                                                        *ngFor="let key of savedKeys" 
+                                                        (click)="questionForm.patchValue({apiKey: key}); setApiKey()">
+                                                        {{ key.substring(0, 8) }}...
+                                                    </button>
+                                                </mat-menu>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- CATEGORY SELECTION SECTION -->
+                                        <div class="mb10">
+                                            <strong>Step 1: Select a category for your questions</strong>
+                                        </div>
+                                        
+                                        <mat-form-field class="w100" appearance="outline">
+                                            <mat-label>Category</mat-label>
+                                            <mat-select formControlName="categoryId" required>
+                                                <mat-option *ngFor="let cat of categories" [value]="cat.cid">
+                                                    {{ cat.title }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-hint>Questions will be added to this category</mat-hint>
+                                            <mat-error *ngIf="questionForm.get('categoryId')?.errors?.['required']">Category is required</mat-error>
+                                        </mat-form-field>
+                                        
+                                        <!-- Category selection status -->
+                                        <div *ngIf="categories.length === 0" class="text-danger mb10">
+                                            <mat-icon inline>warning</mat-icon> No categories loaded. Please create categories first.
+                                        </div>
+                                        <div *ngIf="categories.length > 0" class="mb10">
+                                            <span class="badge bg-primary">{{ categories.length }} categories available</span>
+                                        </div>
+                                        <div *ngIf="questionForm.get('categoryId')?.value" class="mb10">
+                                            <span class="badge bg-success">Selected: {{ getCategoryTitle(questionForm.get('categoryId')?.value) }}</span>
+                                        </div>
+                                        
+                                        <!-- Quick category selection -->
+                                        <div *ngIf="categories.length > 0" class="mb20">
+                                            <small>Quick category selection:</small>
+                                            <div class="category-buttons">
+                                                <button *ngFor="let cat of categories" 
+                                                       type="button" 
+                                                       mat-stroked-button 
+                                                       color="primary" 
+                                                       class="mr10 mb10"
+                                                       [class.active-cat]="questionForm.get('categoryId')?.value === cat.cid"
+                                                       (click)="selectCategory(cat.cid)">
+                                                    {{ cat.title }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <!-- TOPIC SECTION -->
+                                        <div class="mb10">
+                                            <strong>Step 2: Enter question details</strong>
+                                        </div>
+                                        
+                                        <mat-form-field class="w100" appearance="outline">
+                                            <mat-label>Topic</mat-label>
+                                            <input 
+                                                type="text" 
+                                                matInput 
+                                                formControlName="topic"
+                                                placeholder="e.g., Angular Basics, Java Collections, etc.">
+                                            <mat-hint>Be specific for better results</mat-hint>
+                                            <mat-error *ngIf="questionForm.get('topic')?.errors?.['required']">Topic is required</mat-error>
+                                        </mat-form-field>
+                                        
+                                        <mat-form-field class="w100 mt10" appearance="outline">
+                                            <mat-label>Number of Questions</mat-label>
+                                            <input 
+                                                type="number" 
+                                                matInput 
+                                                formControlName="numberOfQuestions"
+                                                min="1" 
+                                                max="20">
+                                            <mat-hint>More questions may take longer to generate (max 20)</mat-hint>
+                                            <mat-error *ngIf="questionForm.get('numberOfQuestions')?.errors?.['required']">Number of questions is required</mat-error>
+                                            <mat-error *ngIf="questionForm.get('numberOfQuestions')?.errors?.['min']">Minimum 1 question</mat-error>
+                                            <mat-error *ngIf="questionForm.get('numberOfQuestions')?.errors?.['max']">Maximum 20 questions</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                
+                                <!-- GENERATE BUTTON SECTION -->
+                                <div class="text-center mt20">
+                                    <div class="mb10">
+                                        <strong>Step 3: Generate your questions</strong>
+                                    </div>
+                                    
+                                    <button 
+                                        mat-raised-button 
+                                        color="primary"
+                                        size="large"
+                                        [disabled]="isGenerating || !questionForm.valid" 
+                                        (click)="generateQuestions()">
+                                        <mat-icon>psychology</mat-icon> Generate Questions
+                                    </button>
+                                    
+                                    <div *ngIf="isGenerating" class="mt10">
+                                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                                        <small>Generating questions... This may take a moment</small>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <!-- Generated Questions Section -->
+                            <div *ngIf="generatedQuestions.length > 0" class="mt20">
+                                <mat-divider></mat-divider>
+                                
+                                <div class="d-flex justify-content-between align-items-center mt20 mb10">
+                                    <h2 class="mb0">Generated Questions ({{ generatedQuestions.length }})</h2>
+                                    
+                                    <div>
+                                        <button mat-button color="primary" (click)="selectAll()">
+                                            <mat-icon>select_all</mat-icon> Select All
+                                        </button>
+                                        <button mat-button color="warn" (click)="deselectAll()">
+                                            <mat-icon>clear_all</mat-icon> Deselect All
+                                        </button>
+                                        <button mat-button color="accent" [disabled]="generatedQuestions.length === 0" (click)="clearQuestions()">
+                                            <mat-icon>delete_sweep</mat-icon> Clear All
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center mb20">
+                                    <button mat-raised-button color="primary" (click)="addAllQuestions()">
+                                        <mat-icon>save</mat-icon> Add Selected Questions
+                                    </button>
+                                    <button mat-raised-button color="accent" class="ml10" (click)="navigateToQuestions()">
+                                        <mat-icon>visibility</mat-icon> View All Questions
+                                    </button>
+                                </div>
+                                
+                                <div *ngFor="let question of generatedQuestions; let i = index" class="question-card mb20">
+                                    <mat-card>
+                                        <mat-card-content>
+                                            <div class="d-flex align-items-center">
+                                                <mat-checkbox 
+                                                    [(ngModel)]="question.isSelected" 
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    color="primary" 
+                                                    class="mr10">
+                                                </mat-checkbox>
+                                                
+                                                <h3 class="mb0 question-content">
+                                                    <span class="question-number">{{ i + 1 }}.</span> {{ question.content }}
+                                                </h3>
+                                            </div>
+                                            
+                                            <div class="options-grid mt10">
+                                                <div class="option" [class.correct-option]="question.answer === '1'">
+                                                    <strong>A)</strong> {{ question.option1 }}
+                                                </div>
+                                                <div class="option" [class.correct-option]="question.answer === '2'">
+                                                    <strong>B)</strong> {{ question.option2 }}
+                                                </div>
+                                                <div class="option" [class.correct-option]="question.answer === '3'">
+                                                    <strong>C)</strong> {{ question.option3 }}
+                                                </div>
+                                                <div class="option" [class.correct-option]="question.answer === '4'">
+                                                    <strong>D)</strong> {{ question.option4 }}
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="text-right mt10">
+                                                <button mat-mini-fab color="primary" matTooltip="Add this question" (click)="addSingleQuestion(question)">
+                                                    <mat-icon>add</mat-icon>
+                                                </button>
+                                            </div>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS Styles -->
+<style>
+    .question-card {
+        border-left: 3px solid #3f51b5;
+    }
+    
+    .correct-option {
+        color: #4caf50;
+        font-weight: bold;
+    }
+    
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .option {
+        padding: 8px;
+        border-radius: 4px;
+        background-color: #f5f5f5;
+    }
+    
+    .question-number {
+        color: #3f51b5;
+        font-weight: bold;
+    }
+    
+    .d-flex {
+        display: flex;
+    }
+    
+    .justify-content-between {
+        justify-content: space-between;
+    }
+    
+    .align-items-center {
+        align-items: center;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    .text-right {
+        text-align: right;
+    }
+    
+    .text-danger {
+        color: #f44336;
+    }
+    
+    .w100 {
+        width: 100%;
+    }
+    
+    .mb0 {
+        margin-bottom: 0;
+    }
+    
+    .mb10 {
+        margin-bottom: 10px;
+    }
+    
+    .mb20 {
+        margin-bottom: 20px;
+    }
+    
+    .mt10 {
+        margin-top: 10px;
+    }
+    
+    .mt20 {
+        margin-top: 20px;
+    }
+    
+    .ml10 {
+        margin-left: 10px;
+    }
+    
+    .mr10 {
+        margin-right: 10px;
+    }
+    
+    .badge {
+        padding: 5px 10px;
+        border-radius: 4px;
+        display: inline-block;
+        font-size: 12px;
+    }
+    
+    .bg-primary {
+        background-color: #3f51b5;
+        color: white;
+    }
+    
+    .bg-success {
+        background-color: #4caf50;
+        color: white;
+    }
+    
+    .category-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 5px;
+    }
+    
+    .active-cat {
+        background-color: #3f51b5;
+        color: white;
+    }
+</style> 

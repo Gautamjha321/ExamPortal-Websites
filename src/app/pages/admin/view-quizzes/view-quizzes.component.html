@@ -1,0 +1,100 @@
+<div class="view-quizzes-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Exams Management</h1>
+            <p class="page-subtitle">Create, manage, and monitor your Exams</p>
+        </div>
+    </div>
+
+    <div class="quizzes-actions">
+        <button 
+            mat-raised-button 
+            class="add-button" 
+            routerLink="/admin/add-quiz"
+        >
+            <mat-icon>question</mat-icon>
+            <span>Create New Exams</span>
+        </button>
+    </div>
+
+    <div class="quizzes-grid" *ngIf="quizzes.length > 0">
+        <div class="quiz-card" *ngFor="let q of quizzes">
+            <div class="quiz-header">
+                <div class="quiz-category">{{q.category.title}}</div>
+                <div class="quiz-status" [ngClass]="{'active': q.active, 'inactive': !q.active}">
+                    {{q.active ? 'Active' : 'Inactive'}}
+                </div>
+            </div>
+            
+            <div class="quiz-content">
+                <h2 class="quiz-title">{{q.title}}</h2>
+                <p class="quiz-description">{{q.description}}</p>
+            </div>
+            
+            <div class="quiz-meta">
+                <div class="meta-item">
+                    <mat-icon>question_answer</mat-icon>
+                    <span>{{q.noOfQuestions}} Questions</span>
+                </div>
+                <div class="meta-item">
+                    <mat-icon>score</mat-icon>
+                    <span>{{q.maxMarks}} Marks</span>
+                </div>
+            </div>
+            
+            <div class="quiz-actions">
+                <button 
+                    mat-raised-button 
+                    class="action-button questions-button"
+                    [routerLink]="'/admin/view-questions/' + q.qId + '/' + q.title"
+                >
+                    <mat-icon>question_answer</mat-icon>
+                    <span>Manage Questions</span>
+                </button>
+                
+                <button 
+                    mat-stroked-button 
+                    class="action-button update-button"
+                    [routerLink]="'/admin/quiz/' + q.qId"
+                >
+                    <mat-icon>edit</mat-icon>
+                    <span>Update</span>
+                </button>
+                
+                <button 
+                    mat-stroked-button 
+                    class="action-button attempts-button"
+                    (click)="viewAttempts(q.qId, q.title)"
+                >
+                    <mat-icon>analytics</mat-icon>
+                    <span>View Attempts</span>
+                </button>
+                
+                <button 
+                    mat-stroked-button 
+                    class="action-button delete-button"
+                    (click)="deleteQuiz(q.qId)"
+                >
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="empty-state" *ngIf="quizzes.length === 0">
+        <div class="empty-icon">
+            <mat-icon>quiz</mat-icon>
+        </div>
+        <h3>No Exams Available</h3>
+        <p>Get started by creating your first Exam. Add questions, set marks, and manage categories all in one place.</p>
+        <button 
+            mat-raised-button 
+            class="add-button" 
+            routerLink="/admin/add-quiz"
+        >
+            <mat-icon>add_circle</mat-icon>
+            <span>Create First Exam</span>
+        </button>
+    </div>
+</div>

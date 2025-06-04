@@ -1,0 +1,26 @@
+<div class="view-attempts-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Quiz Attempts</h1>
+            <p class="page-subtitle">View attempts for: {{quizTitle}}</p>
+        </div>
+    </div>
+
+    <div class="attempts-grid" *ngIf="attempts.length > 0">
+        <div class="attempt-card" *ngFor="let attempt of attempts">
+            <div class="attempt-content">
+                <h2 class="attempt-user">{{attempt.user.username}}</h2>
+                <p class="attempt-date">Attempted on: {{attempt.attemptDate | date}}</p>
+                <p class="attempt-score">Score: {{attempt.score}} / {{attempt.maxMarks}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="empty-state" *ngIf="attempts.length === 0">
+        <div class="empty-icon">
+            <mat-icon>assignment</mat-icon>
+        </div>
+        <h3>No Attempts Available</h3>
+        <p>No one has attempted this quiz yet.</p>
+    </div>
+</div>

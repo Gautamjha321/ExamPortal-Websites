@@ -1,0 +1,119 @@
+<div class="questions-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Questions for {{qTitle}}</h1>
+            <p class="page-subtitle">Manage all questions in this Exam</p>
+        </div>
+    </div>
+
+    <div class="actions-bar">
+        <div class="search-box">
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Search Questions</mat-label>
+                <input matInput placeholder="Type to search..." #searchInput>
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+        
+        <div class="action-buttons">
+            <button 
+                mat-raised-button 
+                class="add-button" 
+                [routerLink]="'/admin/add-question/' + qId + '/' + qTitle"
+            >
+                <mat-icon>add</mat-icon>
+                <span>Add Question</span>
+            </button>
+            
+            <button 
+                mat-raised-button 
+                class="ai-button" 
+                color="accent"
+                [routerLink]="'/admin/ai-generate-questions/' + qId + '/' + qTitle"
+            >
+                <mat-icon>smart_toy</mat-icon>
+                <span>Generate with AI</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="questions-list" *ngIf="questions.length > 0">
+        <div class="question-card" *ngFor="let q of questions; let i = index">
+            <div class="question-header">
+                <div class="question-number">Q{{i+1}}.</div>
+                <div class="question-content" [innerHTML]="q.content"></div>
+            </div>
+            
+            <div class="options-container">
+                <div class="option-row" [ngClass]="{'correct-answer': q.answer == q.option1}">
+                    <div class="option-marker">A</div>
+                    <div class="option-text">{{q.option1}}</div>
+                </div>
+                
+                <div class="option-row" [ngClass]="{'correct-answer': q.answer == q.option2}">
+                    <div class="option-marker">B</div>
+                    <div class="option-text">{{q.option2}}</div>
+                </div>
+                
+                <div class="option-row" [ngClass]="{'correct-answer': q.answer == q.option3}">
+                    <div class="option-marker">C</div>
+                    <div class="option-text">{{q.option3}}</div>
+                </div>
+                
+                <div class="option-row" [ngClass]="{'correct-answer': q.answer == q.option4}">
+                    <div class="option-marker">D</div>
+                    <div class="option-text">{{q.option4}}</div>
+                </div>
+            </div>
+            
+            <div class="question-actions">
+                <button 
+                    mat-mini-fab 
+                    color="primary" 
+                    class="edit-button"
+                    matTooltip="Edit this question"
+                >
+                    <mat-icon>edit</mat-icon>
+                </button>
+                
+                <button 
+                    mat-mini-fab 
+                    color="warn" 
+                    class="delete-button"
+                    matTooltip="Delete this question"
+                    (click)="deleteQuestion(q.quesId)"
+                >
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="empty-state" *ngIf="questions.length == 0">
+        <div class="empty-icon">
+            <mat-icon>help_outline</mat-icon>
+        </div>
+        <h2>No Questions Available</h2>
+        <p>This Exam doesn't have any questions yet. Add your first question to get started.</p>
+        <div class="empty-actions">
+            <button 
+                mat-raised-button 
+                class="add-button" 
+                [routerLink]="'/admin/add-question/' + qId + '/' + qTitle"
+            >
+                <mat-icon>add</mat-icon>
+                <span>Add First Question</span>
+            </button>
+            
+            <button 
+                mat-raised-button 
+                class="ai-button"
+                color="accent"
+                [routerLink]="'/admin/ai-generate-questions/' + qId + '/' + qTitle"
+            >
+                <mat-icon>smart_toy</mat-icon>
+                <span>Generate with AI</span>
+            </button>
+        </div>
+    </div>
+</div>

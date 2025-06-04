@@ -1,0 +1,54 @@
+/* Admin Dashboard Styles */
+.admin-dashboard {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e2e8f0 100%);
+    padding-top: 70px;
+}
+
+.dashboard-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dashboard-layout {
+    display: flex;
+    gap: 20px;
+    min-height: calc(100vh - 110px);
+}
+
+.sidebar-container {
+    width: 280px;
+    position: sticky;
+    top: 90px;
+    height: calc(100vh - 110px);
+    transition: all 0.3s ease;
+}
+
+.content-container {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
+
+    .sidebar-container {
+        width: 100%;
+        position: relative;
+        top: 0;
+        height: auto;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 10px;
+    }
+}

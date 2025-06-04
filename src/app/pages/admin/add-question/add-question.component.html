@@ -1,0 +1,335 @@
+<div class="add-question-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Add Question</h1>
+            <p class="page-subtitle">Create a new question for Exams: {{qTitle}}</p>
+        </div>
+    </div>
+
+    <div class="question-form-card">
+        <div class="form-header">
+            <div class="form-icon">
+                <mat-icon>file_upload</mat-icon>
+            </div>
+            <h2>Bulk Upload Questions</h2>
+        </div>
+
+        <div class="form-content">
+            <div class="upload-section">
+                <p class="upload-info">Upload a CSV or JSON file to add multiple questions at once.</p>
+                
+                <div class="file-upload-container">
+                    <div class="file-drop-zone" 
+                         [class.file-drop-zone-active]="isDragging" 
+                         (dragover)="onDragOver($event)" 
+                         (dragleave)="onDragLeave($event)" 
+                         (drop)="onDrop($event)">
+                        
+                        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                        <p>Drag and drop your file here or</p>
+                        <button type="button" mat-raised-button color="primary" (click)="fileInput.click()">
+                            Browse Files
+                        </button>
+                        <input #fileInput type="file" style="display: none" 
+                               accept=".csv,.json" 
+                               (change)="onFileSelected($event)">
+                        <p class="file-format-hint">Supported formats: CSV, JSON</p>
+                    </div>
+                </div>
+
+                <div *ngIf="selectedFile" class="selected-file">
+                    <mat-icon>description</mat-icon>
+                    <span>{{selectedFile.name}}</span>
+                    <button mat-icon-button color="warn" (click)="removeFile()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+
+                <div *ngIf="parsedQuestions.length > 0" class="parsed-questions-summary">
+                    <div class="summary-header">
+                        <h3>{{parsedQuestions.length}} Questions Found</h3>
+                        <div class="summary-actions">
+                            <button mat-raised-button color="primary" (click)="addAllQuestions()">
+                                <mat-icon>add_circle</mat-icon>
+                                Add All Questions
+                            </button>
+                            <button mat-stroked-button color="warn" (click)="clearParsedQuestions()">
+                                <mat-icon>delete</mat-icon>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <mat-accordion>
+                        <mat-expansion-panel *ngFor="let q of parsedQuestions; let i = index">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Question {{i+1}}
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    {{q.content.substring(0, 60)}}{{q.content.length > 60 ? '...' : ''}}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            
+                            <div class="question-preview">
+                                <p><strong>Question:</strong> {{q.content}}</p>
+                                <p><strong>Option 1:</strong> {{q.option1}}</p>
+                                <p><strong>Option 2:</strong> {{q.option2}}</p>
+                                <p *ngIf="q.option3"><strong>Option 3:</strong> {{q.option3}}</p>
+                                <p *ngIf="q.option4"><strong>Option 4:</strong> {{q.option4}}</p>
+                                <p><strong>Correct Answer:</strong> {{q.answer}}</p>
+                            </div>
+                            
+                            <div class="panel-actions">
+                                <button mat-raised-button color="primary" (click)="addSingleQuestion(q)">
+                                    <mat-icon>add</mat-icon>
+                                    Add This Question
+                                </button>
+                                <button mat-stroked-button color="warn" (click)="removeQuestion(i)">
+                                    <mat-icon>delete</mat-icon>
+                                    Remove
+                                </button>
+                                <button mat-stroked-button color="accent" (click)="editQuestion(q, i)">
+                                    <mat-icon>edit</mat-icon>
+                                    Edit
+                                </button>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-form-card">
+        <div class="form-header">
+            <div class="form-icon">
+                <mat-icon>help_outline</mat-icon>
+            </div>
+            <h2>Manual Question Entry</h2>
+        </div>
+
+        <div class="form-content">
+            <form (ngSubmit)="formSubmit()">
+                <div class="form-section">
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Write Question Content</mat-label>
+                            <textarea 
+                                matInput 
+                                placeholder="Enter your question here" 
+                                name="content" 
+                                [(ngModel)]="question.content" 
+                                rows="5"
+                                required
+                            ></textarea>
+                            <mat-icon matSuffix>help</mat-icon>
+                            <mat-hint>Be clear and concise with your question</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Answer Options</h3>
+                    
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Option 1</mat-label>
+                            <input 
+                                matInput 
+                                placeholder="Enter option 1" 
+                                name="option1" 
+                                [(ngModel)]="question.option1" 
+                                required
+                            >
+                            <mat-icon matSuffix>looks_one</mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Option 2</mat-label>
+                            <input 
+                                matInput 
+                                placeholder="Enter option 2" 
+                                name="option2" 
+                                [(ngModel)]="question.option2" 
+                                required
+                            >
+                            <mat-icon matSuffix>looks_two</mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Option 3</mat-label>
+                            <input 
+                                matInput 
+                                placeholder="Enter option 3" 
+                                name="option3" 
+                                [(ngModel)]="question.option3" 
+                            >
+                            <mat-icon matSuffix>looks_3</mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Option 4</mat-label>
+                            <input 
+                                matInput 
+                                placeholder="Enter option 4" 
+                                name="option4" 
+                                [(ngModel)]="question.option4" 
+                            >
+                            <mat-icon matSuffix>looks_4</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Correct Answer & Configuration</h3>
+                    
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Select Correct Answer</mat-label>
+                            <mat-select name="answer" [(ngModel)]="question.answer" required>
+                                <mat-option *ngIf="question.option1" [value]="question.option1">{{question.option1}}</mat-option>
+                                <mat-option *ngIf="question.option2" [value]="question.option2">{{question.option2}}</mat-option>
+                                <mat-option *ngIf="question.option3" [value]="question.option3">{{question.option3}}</mat-option>
+                                <mat-option *ngIf="question.option4" [value]="question.option4">{{question.option4}}</mat-option>
+                            </mat-select>
+                            <mat-icon matSuffix>check_circle</mat-icon>
+                            <mat-hint>Choose which option is correct</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button 
+                        type="button" 
+                        mat-stroked-button 
+                        class="cancel-button" 
+                        [routerLink]="'/admin/view-questions/' + qId + '/' + qTitle"
+                    >
+                        <mat-icon>arrow_back</mat-icon>
+                        <span>Back</span>
+                    </button>
+                    
+                    <button 
+                        type="submit" 
+                        mat-raised-button 
+                        class="submit-button"
+                    >
+                        <mat-icon>add_circle</mat-icon>
+                        <span>Add Question</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Question Modal -->
+    <div *ngIf="showEditModal" class="edit-modal-overlay">
+        <div class="edit-modal">
+            <div class="edit-modal-header">
+                <h2>Edit Question</h2>
+                <button mat-icon-button (click)="closeEditModal()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            <div class="edit-modal-content">
+                <form (ngSubmit)="saveEditedQuestion()">
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Question Content</mat-label>
+                            <textarea 
+                                matInput 
+                                placeholder="Enter your question here" 
+                                name="content" 
+                                [(ngModel)]="editingQuestion.content" 
+                                rows="5"
+                                required
+                            ></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Option 1</mat-label>
+                            <input 
+                                matInput 
+                                placeholder="Enter option 1" 
+                                name="option1" 
+                                [(ngModel)]="editingQuestion.option1" 
+                                required
+                            >
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Option 2</mat-label>
+                            <input 
+                                matInput 
+                                placeholder="Enter option 2" 
+                                name="option2" 
+                                [(ngModel)]="editingQuestion.option2" 
+                                required
+                            >
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Option 3</mat-label>
+                            <input 
+                                matInput 
+                                placeholder="Enter option 3" 
+                                name="option3" 
+                                [(ngModel)]="editingQuestion.option3" 
+                            >
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Option 4</mat-label>
+                            <input 
+                                matInput 
+                                placeholder="Enter option 4" 
+                                name="option4" 
+                                [(ngModel)]="editingQuestion.option4" 
+                            >
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-field">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Select Correct Answer</mat-label>
+                            <mat-select name="answer" [(ngModel)]="editingQuestion.answer" required>
+                                <mat-option *ngIf="editingQuestion.option1" [value]="editingQuestion.option1">{{editingQuestion.option1}}</mat-option>
+                                <mat-option *ngIf="editingQuestion.option2" [value]="editingQuestion.option2">{{editingQuestion.option2}}</mat-option>
+                                <mat-option *ngIf="editingQuestion.option3" [value]="editingQuestion.option3">{{editingQuestion.option3}}</mat-option>
+                                <mat-option *ngIf="editingQuestion.option4" [value]="editingQuestion.option4">{{editingQuestion.option4}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="edit-modal-actions">
+                        <button type="button" mat-stroked-button (click)="closeEditModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" mat-raised-button color="primary">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

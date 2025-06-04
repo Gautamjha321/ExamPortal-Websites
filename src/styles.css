@@ -1,0 +1,191 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Global Styles */
+html, body { 
+    height: 100%; 
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    overflow-x: hidden;
+}
+
+body { 
+    background: linear-gradient(135deg, #f5f7fa 0%, #e2e8f0 100%);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Main content container - adds padding for fixed navbar */
+router-outlet + * {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.ml20 {
+    margin-left: 20px !important;
+}
+.mr20 {
+    margin-right: 20px !important;
+}
+.mb20 {
+    margin-bottom: 20px !important;
+}
+.mt20 {
+    margin-top: 20px !important;
+}
+
+.ml10 {
+    margin-left: 10px !important;
+}
+.mr10 {
+    margin-right: 10px !important;
+}
+.mb10 {
+    margin-bottom: 10px !important;
+}
+.mt10 {
+    margin-top: 10px !important;
+}
+
+/* Page container for all components */
+.page-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px 30px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .page-container {
+        padding: 0 15px 20px;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #FF3CAC 0%, #784BA0 70%, #2B86C5 100%);
+}
+
+/* Material Design Overrides */
+.mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button,
+.mat-flat-button, .mat-fab, .mat-mini-fab {
+    border-radius: 50px !important;
+    text-transform: uppercase;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.mat-card {
+    border-radius: 20px !important;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(31, 38, 135, 0.1) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.mat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(31, 38, 135, 0.15) !important;
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-in-out;
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+.float {
+    animation: float 6s infinite alternate ease-in-out;
+}
+
+.glow {
+    animation: glow 2s infinite alternate;
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 60, 172, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(255, 60, 172, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 60, 172, 0);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0);
+    }
+    50% {
+        transform: translateY(-15px) rotate(2deg);
+    }
+    100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+}
+
+@keyframes glow {
+    from {
+        filter: drop-shadow(0 0 5px rgba(255, 60, 172, 0.7));
+    }
+    to {
+        filter: drop-shadow(0 0 20px rgba(255, 60, 172, 0.9));
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .hide-on-mobile {
+        display: none !important;
+    }
+    
+    .mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button,
+    .mat-flat-button, .mat-fab, .mat-mini-fab {
+        font-size: 0.9rem;
+        padding: 0.4rem 1rem;
+    }
+}

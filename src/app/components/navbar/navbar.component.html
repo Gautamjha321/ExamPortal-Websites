@@ -1,0 +1,34 @@
+<!-- Simple Navbar -->
+<div class="modern-navbar" [ngClass]="{'navbar-scrolled': isScrolled}">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <a [routerLink]="'/'" class="logo-link">
+        <mat-icon class="brand-icon">menu_book</mat-icon>
+        <span class="brand-text">Examportal</span>
+      </a>
+    </div>
+    
+    <div class="navbar-links">
+      <button *ngIf="!isLoggedIn" mat-button class="nav-button" [routerLink]="'/about'">
+        <span class="button-content">About</span>
+      </button>
+      
+      <button *ngIf="!isLoggedIn" mat-button class="nav-button" [routerLink]="'/login'">
+        <span class="button-content">Login</span>
+      </button>
+      
+      <button *ngIf="!isLoggedIn" mat-button class="nav-button register-btn" [routerLink]="'/signup'">
+        <span class="button-content">Register</span>
+      </button>
+      
+      <button *ngIf="isLoggedIn" mat-button class="nav-button" (click)="logout()">
+        <span class="button-content">Logout</span>
+      </button>
+      
+      <button *ngIf="isLoggedIn && user" mat-button class="nav-button user-btn" [routerLink]="'/user-dashboard/profile'">
+        <mat-icon class="user-icon">person</mat-icon>
+        <span class="button-content">{{user.username}}</span>
+      </button>
+    </div>
+  </div>
+</div>

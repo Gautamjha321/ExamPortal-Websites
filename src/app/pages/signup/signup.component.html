@@ -1,0 +1,120 @@
+<div class="signup-container">
+    <div class="signup-wrapper">
+        <div class="signup-card">
+            <div class="logo-container">
+                <img src="https://cdn-icons-png.flaticon.com/128/17163/17163954.png" alt="Examportal Logo" class="logo-image">
+            </div>
+            
+            <h2 class="signup-title">Create Account</h2>
+            <p class="signup-subtitle">Join Examportal and start your journey</p>
+            
+            <form (ngSubmit)="formSubmit()" class="signup-form">
+                <!-- Username field -->
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Username</mat-label>
+                        <input
+                            [(ngModel)]="user.username"
+                            name="username"
+                            required 
+                            matInput 
+                            placeholder="Choose a username">
+                        <mat-icon matSuffix>person</mat-icon>
+                        <mat-hint>Username must be unique</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <!-- Password field -->
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Password</mat-label>
+                        <input
+                            [(ngModel)]="user.password"
+                            name="password"
+                            [type]="hidePassword ? 'password' : 'text'" 
+                            required 
+                            matInput 
+                            placeholder="Create a password">
+                        <button 
+                            type="button"
+                            mat-icon-button 
+                            matSuffix 
+                            (click)="hidePassword = !hidePassword" 
+                            [attr.aria-label]="'Hide password'" 
+                            [attr.aria-pressed]="hidePassword">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+
+                <!-- First Name field -->
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>First Name</mat-label>
+                        <input
+                            [(ngModel)]="user.firstname"
+                            name="firstName"
+                            required 
+                            matInput 
+                            placeholder="Enter your first name">
+                        <mat-icon matSuffix>badge</mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <!-- Last Name field -->
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Last Name</mat-label>
+                        <input
+                            [(ngModel)]="user.lastname"
+                            name="lastName"
+                            required 
+                            matInput 
+                            placeholder="Enter your last name">
+                        <mat-icon matSuffix>badge</mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <!-- Email field -->
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input
+                            [(ngModel)]="user.email"
+                            name="email"
+                            required 
+                            matInput 
+                            placeholder="Enter your email address"
+                            type="email">
+                        <mat-icon matSuffix>email</mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <!-- Phone Number field -->
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Phone Number</mat-label>
+                        <input
+                            [(ngModel)]="user.phone"
+                            name="phoneNumber"
+                            required 
+                            matInput 
+                            placeholder="Enter your phone number">
+                        <mat-icon matSuffix>phone</mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                    <button mat-raised-button class="signup-button" type="submit">
+                        <span>Register</span>
+                        <mat-icon>how_to_reg</mat-icon>
+                    </button>
+                </div>
+            </form>
+            
+            <div class="signup-footer">
+                <p>Already have an account? <a [routerLink]="'/login'" class="login-link">Login</a></p>
+            </div>
+        </div>
+    </div>
+</div>

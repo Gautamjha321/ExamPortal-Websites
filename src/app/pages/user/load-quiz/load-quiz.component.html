@@ -1,0 +1,56 @@
+<div class="quiz-container">
+  <div class="quiz-header">
+    <h1 class="quiz-title">Available Exams</h1>
+    <div class="quiz-search">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search Exams</mat-label>
+        <input matInput placeholder="Type to search..." [(ngModel)]="searchTerm">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="quiz-content">
+    <div *ngIf="quizzes.length == 0" class="no-quizzes">
+      <mat-icon class="empty-icon">quiz</mat-icon>
+      <h2>No Exams Available</h2>
+      <p>No Exams are available in this category.</p>
+    </div>
+    
+    <div class="quiz-grid" *ngIf="quizzes.length > 0">
+      <div class="quiz-card" *ngFor="let q of quizzes">
+        <div class="quiz-card-header">
+          <div class="quiz-category">{{q.category.title}}</div>
+          <div class="quiz-status" [ngClass]="{'active': q.active}">
+            {{q.active ? 'ACTIVE' : 'INACTIVE'}}
+          </div>
+        </div>
+        
+        <div class="quiz-card-content">
+          <h2 class="quiz-card-title">{{q.title}}</h2>
+          <p class="quiz-card-description">{{q.description}}</p>
+          
+          <div class="quiz-meta">
+            <div class="quiz-meta-item">
+              <mat-icon>help</mat-icon>
+              <span>{{q.numberOfQuestions}} Questions</span>
+            </div>
+            <div class="quiz-meta-item">
+              <mat-icon>timer</mat-icon>
+              <span>{{q.maxMarks}} Marks</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="quiz-card-actions">
+          <button mat-raised-button class="view-button" [routerLink]="'/user-dashboard/instructions/' + q.qId">
+            <mat-icon>visibility</mat-icon> View
+          </button>
+          <button mat-raised-button color="primary" class="start-button" [routerLink]="'/user-dashboard/instructions/' + q.qId">
+            <mat-icon>play_arrow</mat-icon> Start
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+<div class="instructions-container" *ngIf="quiz">
+  <div class="instructions-header">
+    <h1 class="instructions-title">Quiz Instructions</h1>
+    <p class="instructions-subtitle">Read the instructions carefully before starting the quiz</p>
+  </div>
+  
+  <div class="instructions-content">
+    <div class="quiz-info-card">
+      <div class="quiz-info-header">
+        <div class="quiz-icon">
+          <mat-icon>quiz</mat-icon>
+        </div>
+        <div class="quiz-details">
+          <h2>{{quiz.title}}</h2>
+          <p>{{quiz.description}}</p>
+        </div>
+      </div>
+      
+      <div class="quiz-meta-info">
+        <div class="meta-item">
+          <mat-icon>help</mat-icon>
+          <div class="meta-content">
+            <h3>Total Questions</h3>
+            <p>{{quiz.numberOfQuestions}}</p>
+          </div>
+        </div>
+        
+        <div class="meta-item">
+          <mat-icon>timer</mat-icon>
+          <div class="meta-content">
+            <h3>Max Time</h3>
+            <p>{{quiz.numberOfQuestions * 2}} Minutes</p>
+          </div>
+        </div>
+        
+        <div class="meta-item">
+          <mat-icon>grade</mat-icon>
+          <div class="meta-content">
+            <h3>Max Marks</h3>
+            <p>{{quiz.maxMarks}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="instructions-card">
+      <h2 class="section-title">Important Instructions</h2>
+      
+      <div class="instruction-list">
+        <div class="instruction-item">
+          <div class="instruction-icon">
+            <mat-icon>schedule</mat-icon>
+          </div>
+          <div class="instruction-content">
+            <h3>Time Limit</h3>
+            <p>The quiz has a time limit of {{quiz.numberOfQuestions * 2}} minutes. It will be automatically submitted when the time expires.</p>
+          </div>
+        </div>
+        
+        <div class="instruction-item">
+          <div class="instruction-icon">
+            <mat-icon>question_answer</mat-icon>
+          </div>
+          <div class="instruction-content">
+            <h3>Question Format</h3>
+            <p>All questions are in Multiple Choice Question (MCQ) format. Each question has one correct answer.</p>
+          </div>
+        </div>
+        
+        <div class="instruction-item">
+          <div class="instruction-icon">
+            <mat-icon>calculate</mat-icon>
+          </div>
+          <div class="instruction-content">
+            <h3>Scoring</h3>
+            <p>Each question carries equal marks. There is no negative marking for wrong answers.</p>
+          </div>
+        </div>
+        
+        <div class="instruction-item">
+          <div class="instruction-icon">
+            <mat-icon>refresh</mat-icon>
+          </div>
+          <div class="instruction-content">
+            <h3>No Refreshing</h3>
+            <p>Do not refresh the page during the quiz. This will reset your progress and you'll get new questions.</p>
+          </div>
+        </div>
+        
+        <div class="instruction-item">
+          <div class="instruction-icon">
+            <mat-icon>tab</mat-icon>
+          </div>
+          <div class="instruction-content">
+            <h3>No Tab Switching</h3>
+            <p>Do not switch tabs or minimize the window during the quiz. This may be considered as cheating.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="action-container">
+      <button mat-raised-button class="back-button" [routerLink]="'/user-dashboard/0'">
+        <mat-icon>arrow_back</mat-icon> Back
+      </button>
+      <button mat-raised-button class="start-button" (click)="startQuiz()">
+        <mat-icon>play_arrow</mat-icon> Start Quiz
+      </button>
+    </div>
+  </div>
+</div>

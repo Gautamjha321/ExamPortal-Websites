@@ -1,0 +1,112 @@
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="header-content">
+            <h1 class="page-title">Your Profile</h1>
+            <p class="page-subtitle">View and manage your account information</p>
+        </div>
+    </div>
+
+    <div class="profile-content" *ngIf="user">
+        <div class="profile-card">
+            <div class="profile-image-container">
+                <div class="profile-image">
+                    <img 
+                        [src]="'https://ui-avatars.com/api/?name=' + user.firstName + '+' + user.lastName + '&background=random&color=fff&size=100'"
+                        alt="Profile Image"
+                    >
+                </div>
+                <div class="profile-badge" *ngIf="user.authorities[0].authority == 'ADMIN'">
+                    <mat-icon>verified</mat-icon>
+                    <span>Admin</span>
+                </div>
+                <div class="profile-badge" *ngIf="user.authorities[0].authority == 'NORMAL'">
+                    <mat-icon>person</mat-icon>
+                    <span>Student</span>
+                </div>
+            </div>
+
+            <div class="profile-details">
+                <div class="profile-name">
+                    <h2>{{user.firstName}} {{user.lastName}}</h2>
+                </div>
+                
+                <div class="profile-info-list">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <mat-icon>email</mat-icon>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">{{user.email}}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <mat-icon>phone</mat-icon>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value">{{user.phone}}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <mat-icon>person</mat-icon>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Username</div>
+                            <div class="info-value">{{user.username}}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <mat-icon>verified_user</mat-icon>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Role</div>
+                            <div class="info-value">{{user.authorities[0].authority}}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <mat-icon>info</mat-icon>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">About</div>
+                            <div class="info-value about-text">{{user.about || 'No information provided'}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <button 
+                mat-raised-button 
+                class="edit-button"
+            >
+                <mat-icon>edit</mat-icon>
+                <span>Edit Profile</span>
+            </button>
+            
+            <button 
+                mat-stroked-button 
+                class="password-button"
+            >
+                <mat-icon>lock</mat-icon>
+                <span>Change Password</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="loading-container" *ngIf="!user">
+        <div class="loading-spinner">
+            <mat-spinner diameter="50"></mat-spinner>
+        </div>
+        <p class="loading-text">Loading profile data...</p>
+    </div>
+</div>

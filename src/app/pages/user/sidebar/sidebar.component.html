@@ -1,0 +1,83 @@
+<div class="sidebar-wrapper">
+  <div class="user-info">
+    <div class="user-avatar">
+      <img src="assets/image.png" alt="User" onerror="this.src='assets/user.png'">
+    </div>
+    <h3 class="user-name">Exam Portal</h3>
+    <div class="user-status">
+      <span class="status-indicator"></span>
+      <span>Online</span>
+    </div>
+  </div>
+  
+  <div class="user-stats">
+    <div class="stat-item">
+      <div class="stat-value">2</div>
+      <div class="stat-label">Exams</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">85%</div>
+      <div class="stat-label">Score</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">8</div>
+      <div class="stat-label">Completed</div>
+    </div>
+  </div>
+  
+  <div class="menu-section">
+    <h4 class="menu-title">MAIN MENU</h4>
+    
+    <div class="menu-items">
+      <a [routerLink]="'/user-dashboard/0'" class="menu-item" routerLinkActive="active-link">
+        <mat-icon>dashboard</mat-icon>
+        <span>All Exams</span>
+        <div class="hover-effect"></div>
+      </a>
+      
+      <a [routerLink]="'/user-dashboard/profile'" class="menu-item" routerLinkActive="active-link">
+        <mat-icon>person</mat-icon>
+        <span>Profile</span>
+        <div class="hover-effect"></div>
+      </a>
+      
+      <h4 class="menu-title">CATEGORIES</h4>
+      
+      <a [routerLink]="'/user-dashboard/'+c.cid" *ngFor="let c of categories" class="menu-item" routerLinkActive="active-link">
+        <mat-icon>quiz</mat-icon>
+        <span>{{c.title}}</span>
+        <div class="hover-effect"></div>
+      </a>
+      
+      <h4 class="menu-title">MORE OPTIONS</h4>
+      
+      <a [routerLink]="'/user-dashboard/results'" class="menu-item" routerLinkActive="active-link">
+        <mat-icon>assessment</mat-icon>
+        <span>My Results</span>
+        <div class="hover-effect"></div>
+      </a>
+      
+      <a [routerLink]="'/user-dashboard/about'" class="menu-item" routerLinkActive="active-link">
+        <mat-icon>info</mat-icon>
+        <span>About</span>
+        <div class="hover-effect"></div>
+      </a>
+      
+      <a (click)="logout()" class="menu-item">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+        <div class="hover-effect"></div>
+      </a>
+    </div>
+  </div>
+  
+  <div class="sidebar-footer">
+    <div class="system-status">
+      <div class="status-dot"></div>
+      <span>System Online</span>
+    </div>
+    <div class="version-info">v2.1.4</div>
+  </div>
+</div>
+
+<!-- {{categories | json}} -->

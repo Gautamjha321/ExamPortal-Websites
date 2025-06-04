@@ -1,0 +1,11 @@
+{
+  "/api/gemini-proxy": {
+    "target": "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/api/gemini-proxy": ""
+    }
+  }
+} 

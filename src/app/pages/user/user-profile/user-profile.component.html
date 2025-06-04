@@ -1,0 +1,153 @@
+<div class="profile-container" *ngIf="user">
+  <!-- Gradient Header with Avatar and User Info -->
+  <div class="profile-header">
+    <!-- Decorative Elements -->
+    <div class="profile-avatar">
+      <img src="assets/image.png" alt="User Avatar" onerror="this.src='assets/images/user.png'">
+      <div class="profile-status" [ngClass]="{'active': user.enabled}"></div>
+    </div>
+    <div class="profile-title">
+      <h1>{{user.firstName || 'User'}} {{user.lastName || ''}}</h1>
+      <p class="profile-subtitle">{{user.username || 'Username not available'}}</p>
+      <div class="profile-badges" *ngIf="user.authorities && user.authorities.length > 0">
+        <span class="badge" *ngFor="let authority of user.authorities">
+          {{authority.authority}}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-content">
+    <!-- Personal Information Section -->
+    <div class="profile-section">
+      <h2 class="section-title">Personal Information</h2>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-icon">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="info-content">
+            <h3>Username</h3>
+            <p>{{user.username || 'Not available'}}</p>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">
+            <mat-icon>fingerprint</mat-icon>
+          </div>
+          <div class="info-content">
+            <h3>User ID</h3>
+            <p>{{user.id || 'Not available'}}</p>
+          </div>
+        </div>
+        
+        <div class="info-item" *ngIf="user.phone">
+          <div class="info-icon">
+            <mat-icon>phone</mat-icon>
+          </div>
+          <div class="info-content">
+            <h3>Phone</h3>
+            <p>{{user.phone || 'Not available'}}</p>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">
+            <mat-icon>email</mat-icon>
+          </div>
+          <div class="info-content">
+            <h3>Email</h3>
+            <p>{{user.email || 'Not available'}}</p>
+          </div>
+        </div>
+        
+        <div class="info-item" *ngIf="user.authorities && user.authorities.length > 0">
+          <div class="info-icon">
+            <mat-icon>verified_user</mat-icon>
+          </div>
+          <div class="info-content">
+            <h3>Role</h3>
+            <p>{{user.authorities[0].authority || 'Not available'}}</p>
+          </div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-icon">
+            <mat-icon>toggle_on</mat-icon>
+          </div>
+          <div class="info-content">
+            <h3>Status</h3>
+            <p [ngClass]="{'status-active': user.enabled, 'status-inactive': !user.enabled}">
+              {{user.enabled ? 'Active' : 'Inactive'}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Activity Section (New) -->
+    <div class="profile-section">
+      <h2 class="section-title">Recent Activity</h2>
+      
+      <div class="activity-timeline">
+        <div class="timeline-item">
+          <div class="timeline-icon">
+            <mat-icon>event</mat-icon>
+          </div>
+          <div class="timeline-content">
+            <h3>Last Login</h3>
+            <p>Today, 10:30 AM</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-icon">
+            <mat-icon>assignment_turned_in</mat-icon>
+          </div>
+          <div class="timeline-content">
+            <h3>Completed Quiz</h3>
+            <p>Yesterday, 3:45 PM</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-icon">
+            <mat-icon>school</mat-icon>
+          </div>
+          <div class="timeline-content">
+            <h3>Enrolled in Course</h3>
+            <p>3 days ago</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="profile-actions">
+      <button mat-raised-button color="primary" class="action-button" (click)="editProfile()">
+        <mat-icon>edit</mat-icon> Edit Profile
+      </button>
+      <button mat-raised-button color="accent" class="action-button" (click)="changePassword()">
+        <mat-icon>security</mat-icon> Change Password
+      </button>
+      <button mat-raised-button class="action-button" (click)="viewHistory()">
+        <mat-icon>history</mat-icon> View History
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="profile-loading" *ngIf="isLoading">
+  <mat-spinner diameter="50"></mat-spinner>
+  <p>Loading profile information...</p>
+</div>
+
+<!-- No Data State -->
+<div class="profile-loading" *ngIf="!user && !isLoading">
+  <mat-icon style="font-size: 50px; height: 50px; width: 50px; color: #b06ab3;">account_circle</mat-icon>
+  <p>No profile data available. Please log in again.</p>
+  <button mat-raised-button color="primary" routerLink="/login">Go to Login</button>
+</div>
